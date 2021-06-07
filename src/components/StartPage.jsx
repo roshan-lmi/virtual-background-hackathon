@@ -44,12 +44,6 @@ class StartPage extends React.Component {
           selected: false,
         },
       ],
-      videos: [
-        {
-          url: "/videos/video1.mp4",
-          selected: false,
-        },
-      ],
     };
   }
 
@@ -57,7 +51,6 @@ class StartPage extends React.Component {
 
   selectImage(image, index) {
     this.deselectAllImages();
-    this.deselectAllVideos();
     let images = this.state.images;
     images[index].selected = true;
     this.setState({
@@ -65,30 +58,6 @@ class StartPage extends React.Component {
       images: images,
       selected_resource: image,
       selected_resource_type: "image",
-    });
-  }
-
-  selectVideo(video, index) {
-    this.deselectAllVideos();
-    this.deselectAllImages();
-    let videos = this.state.videos;
-    videos[index].selected = true;
-    this.setState({
-      ...this.state,
-      videos: videos,
-      selected_resource: video,
-      selected_resource_type: "video",
-    });
-  }
-
-  deselectAllVideos() {
-    let videos = this.state.videos;
-    for (let index = 0; index < videos.length; index++) {
-      videos[index].selected = false;
-    }
-    this.setState({
-      ...this.state,
-      videos: videos,
     });
   }
 
@@ -101,10 +70,6 @@ class StartPage extends React.Component {
       ...this.state,
       images: images,
     });
-  }
-
-  componentDidMount() {
-    console.dir(this.webcamRef);
   }
 
   render() {
@@ -141,8 +106,6 @@ class StartPage extends React.Component {
                   width={532}
                   height={400}
                   bodypixConfig={this.state.slowConfig}
-                  id={"bodycam"}
-                  title={"bodypix_tensorflow"}
                 ></BodyPixEnabledWebCam>
               </div>
             </div>

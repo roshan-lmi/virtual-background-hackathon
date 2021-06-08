@@ -1,8 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import * as bodyPix from "@tensorflow-models/body-pix";
 import * as tf from "@tensorflow/tfjs";
-import { NonMaxSuppressionV3 } from "@tensorflow/tfjs";
 
 class BodyPixEnabledWebCam extends React.Component {
   constructor(props) {
@@ -26,7 +24,7 @@ class BodyPixEnabledWebCam extends React.Component {
             "Yay! The readyState just increased to  " +
               "HAVE_CURRENT_DATA or greater for the first time."
           );
-          if (this.state.net == null) {
+          if (this.state.net === null) {
             bodyPix
               .load(this.props.bodypixConfig)
               .catch((error) => {
@@ -51,14 +49,14 @@ class BodyPixEnabledWebCam extends React.Component {
       this.state.net
         .segmentPerson(this.videoTag.current, {
           flipHorizontal: true,
-          internalResolution: "low",
-          segmentationThreshold: 0.33,
+          internalResolution: "medium",
+          segmentationThreshold: 0.25,
+        })
+        .then((personSegmentation) => {
+          this.drawBody(personSegmentation);
         })
         .catch((err) => {
           console.log(err);
-        })
-        .then((personsegmentation) => {
-          this.drawBody(personsegmentation);
         });
     }
     requestAnimationFrame(this.detectBody);

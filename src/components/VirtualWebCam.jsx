@@ -9,14 +9,9 @@ class BodyPixEnabledWebCam extends React.Component {
     super(props);
     this.state = {
       net: null,
-      style: {
-        display: "none",
-      },
     };
     this.videoTag = React.createRef();
     this.canvasTag = React.createRef();
-    this.drawBody = this.drawBody.bind(this);
-    this.detectBody = this.detectBody.bind(this);
   }
 
   componentDidMount() {
@@ -25,8 +20,6 @@ class BodyPixEnabledWebCam extends React.Component {
       .getUserMedia({ video: true })
       .then((stream) => {
         this.videoTag.current.srcObject = stream;
-        console.log("See the content");
-        console.dir(this.videoTag);
 
         this.videoTag.current.onloadeddata = (event) => {
           console.log(
@@ -34,8 +27,6 @@ class BodyPixEnabledWebCam extends React.Component {
               "HAVE_CURRENT_DATA or greater for the first time."
           );
           if (this.state.net == null) {
-            console.log("Loading this config");
-            console.dir(this.props.bodypixConfig);
             bodyPix
               .load(this.props.bodypixConfig)
               .catch((error) => {
@@ -55,7 +46,7 @@ class BodyPixEnabledWebCam extends React.Component {
       });
   }
 
-  detectBody() {
+  detectBody = () => {
     if (this.state.net != null) {
       this.state.net
         .segmentPerson(this.videoTag.current, {
@@ -71,9 +62,9 @@ class BodyPixEnabledWebCam extends React.Component {
         });
     }
     requestAnimationFrame(this.detectBody);
-  }
+  };
 
-  drawBody(personSegmentation) {
+  drawBody = (personSegmentation) => {
     const foregroundColor = { r: 0, g: 0, b: 0, a: 0 };
     const backgroundColor = { r: 0, g: 0, b: 0, a: 255 };
     const backgroundDarkeningMask = bodyPix.toMask(
@@ -103,11 +94,12 @@ class BodyPixEnabledWebCam extends React.Component {
         this.props.width,
         this.props.height
       );
-    var imageData = this.canvasTag.current
+    let imageData = this.canvasTag.current
       .getContext("2d")
       .getImageData(0, 0, this.props.width, this.props.height);
-    var pixel = imageData.data;
-    for (var p = 0; p < pixel.length; p += 4) {
+
+    let pixel = imageData.data;
+    for (let p = 0; p < pixel.length; p += 4) {
       if (personSegmentation.data[p / 4] == 0) {
         pixel[p + 3] = 0;
       }
@@ -115,7 +107,7 @@ class BodyPixEnabledWebCam extends React.Component {
 
     this.canvasTag.current.getContext("2d").imageSmoothingEnabled = true;
     this.canvasTag.current.getContext("2d").putImageData(imageData, 0, 0);
-  }
+  };
 
   render() {
     return (
@@ -127,7 +119,7 @@ class BodyPixEnabledWebCam extends React.Component {
           height={this.props.height}
           autoPlay
           title={this.props.title}
-          style={this.state.style}
+          style={{ display: "none" }}
         ></video>
         <canvas
           className="person"

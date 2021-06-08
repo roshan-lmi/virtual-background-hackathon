@@ -1,5 +1,5 @@
 import React from "react";
-import BodyPixEnabledWebCam from "./BodyPixEnabledWebCam";
+import VirtualWebCam from "./VirtualWebCam";
 
 class StartPage extends React.Component {
   constructor(props) {
@@ -15,33 +15,25 @@ class StartPage extends React.Component {
       },
       selected_resource: {
         url: "/img/backgrounds/bg6.jpg",
-        selected: true,
       },
-      selected_resource_type: "image",
       images: [
         {
           url: "/img/backgrounds/bg6.jpg",
-          selected: true,
         },
         {
           url: "/img/backgrounds/bg310.jpg",
-          selected: false,
         },
         {
           url: "/img/backgrounds/bg47.jpg",
-          selected: false,
         },
         {
           url: "/img/backgrounds/bg39.jpg",
-          selected: false,
         },
         {
           url: "/img/backgrounds/bg21.jpg",
-          selected: false,
         },
         {
           url: "/img/backgrounds/bg8.jpg",
-          selected: false,
         },
       ],
     };
@@ -50,25 +42,9 @@ class StartPage extends React.Component {
   webcamRef = null;
 
   selectImage(image, index) {
-    this.deselectAllImages();
-    let images = this.state.images;
-    images[index].selected = true;
     this.setState({
       ...this.state,
-      images: images,
       selected_resource: image,
-      selected_resource_type: "image",
-    });
-  }
-
-  deselectAllImages() {
-    let images = this.state.images;
-    for (let index = 0; index < images.length; index++) {
-      images[index].selected = false;
-    }
-    this.setState({
-      ...this.state,
-      images: images,
     });
   }
 
@@ -78,51 +54,47 @@ class StartPage extends React.Component {
         <div className="full-contain">
           <div className="main-contain">
             <div>
-              <div className="title-b">Default Camera Source</div>
-              <div className="camera-zone">
-                <div class="background-replacement">
-                  {this.state.selected_resource_type == "image" && (
-                    <img src={this.state.selected_resource.url} />
-                  )}
-                </div>
-                {this.state.isLoading == true && (
-                  <div className="loading-area">
-                    <span>Loading..</span>
-                  </div>
-                )}
-                <BodyPixEnabledWebCam
-                  onLoaded={(config) => {
-                    this.setState({
-                      ...this.state,
-                      isLoading: false,
-                    });
-                  }}
-                  onError={() => {
-                    this.setState({
-                      ...this.state,
-                      isLoading: false,
-                    });
-                  }}
-                  width={532}
-                  height={400}
-                  bodypixConfig={this.state.slowConfig}
-                ></BodyPixEnabledWebCam>
+              <div className="title-b">Webcam</div>
+              <div class="background-replacement">
+                <img src={this.state.selected_resource.url} />
               </div>
+              {this.state.isLoading == true && (
+                <div className="loading-area">
+                  <span>Loading..</span>
+                </div>
+              )}
+              <VirtualWebCam
+                onLoaded={(config) => {
+                  this.setState({
+                    ...this.state,
+                    isLoading: false,
+                  });
+                }}
+                onError={() => {
+                  this.setState({
+                    ...this.state,
+                    isLoading: false,
+                  });
+                }}
+                width={532}
+                height={400}
+                bodypixConfig={this.state.slowConfig}
+              />
             </div>
             <div className="rhs">
               <div className="choose-an-image">
-                <div className="title-b">Choose an Image</div>
+                <div className="title-b">Choose Background Images</div>
                 <div className="mgrid">
                   {this.state.images.map((item, index) => {
-                    if (item.selected == true) {
+                    if (item.url === this.state.selected_resource.url) {
                       return (
                         <div
-                          className="selectable selected"
+                          className="selectable"
                           onClick={() => {
                             this.selectImage(item, index);
                           }}
                         >
-                          <div className="selected-bar">Currently Selected</div>
+                          <div className="selected-bar" />
                           <img src={item.url} />
                         </div>
                       );

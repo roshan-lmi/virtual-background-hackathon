@@ -58,7 +58,7 @@ class StartPage extends React.Component {
               <div class="background-replacement">
                 <img src={this.state.selected_resource.url} />
               </div>
-              {this.state.isLoading == true && (
+              {this.state.isLoading === true && (
                 <div className="loading-area">
                   <span>Loading..</span>
                 </div>

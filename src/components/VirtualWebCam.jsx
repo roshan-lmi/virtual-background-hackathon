@@ -50,7 +50,7 @@ class BodyPixEnabledWebCam extends React.Component {
         .segmentPerson(this.videoTag.current, {
           flipHorizontal: true,
           internalResolution: "medium",
-          segmentationThreshold: 0.25,
+          segmentationThreshold: 0.7,
         })
         .then((personSegmentation) => {
           this.drawBody(personSegmentation);
@@ -63,26 +63,6 @@ class BodyPixEnabledWebCam extends React.Component {
   };
 
   drawBody = (personSegmentation) => {
-    const foregroundColor = { r: 0, g: 0, b: 0, a: 0 };
-    const backgroundColor = { r: 0, g: 0, b: 0, a: 255 };
-    const backgroundDarkeningMask = bodyPix.toMask(
-      personSegmentation,
-      foregroundColor,
-      backgroundColor
-    );
-
-    const opacity = 0.7;
-    const maskBlurAmount = 9;
-    const flipHorizontal = false;
-
-    bodyPix.drawMask(
-      this.canvasTag.current,
-      this.videoTag.current,
-      backgroundDarkeningMask,
-      opacity,
-      maskBlurAmount,
-      flipHorizontal
-    );
     this.canvasTag.current
       .getContext("2d")
       .drawImage(
@@ -103,7 +83,26 @@ class BodyPixEnabledWebCam extends React.Component {
       }
     }
 
-    this.canvasTag.current.getContext("2d").imageSmoothingEnabled = true;
+    const foregroundColor = { r: 0, g: 0, b: 0, a: 0 };
+    const backgroundColor = { r: 0, g: 0, b: 0, a: 255 };
+    const backgroundDarkeningMask = bodyPix.toMask(
+      personSegmentation,
+      foregroundColor,
+      backgroundColor
+    );
+
+    const opacity = 0.7;
+    const maskBlurAmount = 9;
+    const flipHorizontal = false;
+
+    bodyPix.drawMask(
+      this.canvasTag.current,
+      this.videoTag.current,
+      backgroundDarkeningMask,
+      opacity,
+      maskBlurAmount,
+      flipHorizontal
+    );
     this.canvasTag.current.getContext("2d").putImageData(imageData, 0, 0);
   };
 
